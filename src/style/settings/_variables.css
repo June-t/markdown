@@ -1,0 +1,13 @@
+:root {
+  /* colors theme*/
+  --color-primary: #1f2024;
+  --color-secundary: #28292d;
+  --color-third: #353535;
+  --color-primary-accent: #862af9;
+  --color-secundary-accent: #9c4eff;
+  /* colors */
+  --color-white: #fcfefd;
+  --color-grey: #d3d3d3;
+  /* transition */
+  --transition: 0.2s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+}

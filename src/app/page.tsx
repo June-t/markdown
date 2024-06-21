@@ -1,95 +1,85 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import ToolsComponent from "@/components/tools.components";
+import MarkdownIt from "markdown-it";
+import hljs from "highlight.js";
 
-export default function Home() {
+export default function Page() {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [markdown, setMarkdown] = useState<string>("");
+  const [html, setHtml] = useState<string>("");
+
+  useEffect(() => {
+    const md: MarkdownIt = new MarkdownIt({
+      html: true,
+      xhtmlOut: true,
+      breaks: true,
+      langPrefix: "language-",
+      linkify: true,
+      typographer: false,
+      quotes: "“”‘’",
+      highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return (
+              '<pre><code class="hljs">' +
+              hljs.highlight(str, { language: lang, ignoreIllegals: true })
+                .value +
+              "</code></pre>"
+            );
+          } catch (__) {}
+        }
+
+        return (
+          '<pre><code class="hljs">' +
+          md.utils.escapeHtml(str) +
+          "</code></pre>"
+        );
+      },
+    });
+
+    const processedMarkdown = markdown;
+    const result = md.render(processedMarkdown);
+    setHtml(result);
+  }, [markdown]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMarkdown(event.target.value);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className='wrapper'>
+      <div className='wrapper__header'>
+        <div className='header__name'>
+          <h1>Markdown</h1>
+          <span>It&#39;s a simple markdown editor</span>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+        <ToolsComponent
+          container={textareaRef}
+          markdown={markdown}
+          html={html}
+          setMarkdown={setMarkdown}
         />
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className='wrapper__body'>
+        <div className='body__editor'>
+          <div className='editor'>
+            <textarea
+              ref={textareaRef}
+              value={markdown}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className='body__preview'>
+          <div className='preview'>
+            <div
+              className='preview__markdown'
+              dangerouslySetInnerHTML={{ __html: html }}
+            ></div>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

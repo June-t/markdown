@@ -1,6 +1,8 @@
 {
   "name": "markdown",
   "version": "0.1.0",
+  "author": "Alexander Crespo",
+  "homepage": "https://www.linkedin.com/in/june-tk/",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,16 +11,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "highlight.js": "^11.9.0",
+    "markdown-it": "^14.1.0",
+    "next": "14.2.4",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.4"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/markdown-it": "^14.1.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4"
+    "eslint-config-next": "14.2.4",
+    "typescript": "^5"
   }
 }
